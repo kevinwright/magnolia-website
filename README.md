@@ -1,7 +1,7 @@
 # Magnolia website
 
 This is the source for the Magnolia website, hosted at
-[http://magnolia.work/](magnolia.work).
+[magnolia.work](http://magnolia.work/).
 
 Corrections, additions and other improvements are welcome.
 
