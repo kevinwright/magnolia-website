@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Magnolia: Better generic derivation for Scala
+    </title>
+    <meta charset="UTF-8"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css?family=Cormorant:500i|Cormorant+SC:500|Cormorant+Unicase:300|Cormorant+Upright:500,700|Inconsolata');
+body { padding: 0; margin: 0; font-family: 'Cormorant Upright'; font-weight: 500; font-size: 15px; }
+.header { padding: 60px 0 0 0; color: black; margin: 0; text-align: center; }
+#headerText { line-height: 2.8em; padding: 30px 0 20px 0; display: inline-block; text-align: left; }
+.header img { display: inline; width: 390px; height: 314px; margin: 0 -50px 20px 0; }
+p img.left, h3 img.left { float: left; position: relative; margin-left: -80px; margin-right: 30px; }
+p img.right, h3 img.right { float: right; position: relative; margin-right: -80px; margin-left: 30px; }
+p img.center { display: block; margin-right: auto; margin-left: auto; }
+a:link, a:visited, a:hover, a:active { color: #b6274d; text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1 { font-family: "Cormorant Unicase"; font-size: 5em; font-weight: 400; margin: 0; text-align: center; }
+h1 a:link, h1 a:visited, h1 a:hover, h1 a:active { text-decoration: none; color: black; }
+h2 { font-family: "Cormorant"; font-size: 2em; line-height: 1.5em; font-weight: 400; font-style: italic; margin: 0 0 0 0; padding: 1vw 0 1vw 0; }
+h3 { font-family: "Cormorant SC"; font-size: 2em; color: #8c2b11; font-weight: 400; margin: 1.8em 0 0.6em; }
+p code { font-size: 0.9em; }
+h4 { font-family: "Cormorant SC"; font-weight: 700; margin: 1.6em 0 -0.3em; padding-bottom: 0; }
+ul { font-size: 1.3em; margin: 0.75em 0; padding: 0 3em 0; list-style: none; }
+ul li { line-height: 1.5em; }
+.inset ul { font-size: 1.0em; padding: 0 1em; }
+li:before { content: "—"; display: inline-block; width: 0; left: -1em; position: relative; }
+.page { clear: both; width: 80vw; max-width: 800px; margin: 5vw auto 5vw auto; }
+p { text-align: justify; font-weight: 300; line-height: 2em; font-size: 1.5em; }
+code, pre { font-family: "Inconsolata"; font-size-adjust: 0.42; clear: both; }
+pre { margin: 0 0 0 2em; clear: none; font-size: 1.5em; line-height: 1.5em; white-space: pre-wrap; }
+.inset { float: right; width: 30vw; margin: 0 -10vw 1vw 5vw; }
+.inset h3 { font-size: 1.5em; padding: 0; margin: 0.4vw 0 0; }
+.inset p { padding: 0 1vw; line-height: 1.35em; text-align: left; font-size: 0.9em; }
+.inset h4 { margin: 1.8em 0 0.5em 0; padding: 0; font-size: 0.8em; text-transform: uppercase; font-family: "Cormorant SC"; }
+.footer { color: gray; font-size: 1em; text-align: right; }
+@media screen and (max-width: 900px) {
+  .inset { float: none; padding: 0; margin: 0; width: 100%; }
+  .header img { margin: 0 auto 0; display: block; }
+  body { font-size: 10px; }
+  p img.left, h3 img.left { margin-left: -30px; zoom: 0.75; }
+  p img.right, h3 img.right { margin-right: -30px; zoom: 0.75; }
+  pre { margin: 0; font-size: 1.2em; }
+  #headerText { text-align: center; }
+}
+    </style>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-60044672-4','auto');ga('send','pageview');
+    </script>
+  </head>
+  <body>
+    <div class="header">
+      <img src="images/magnolia3.png">
+      <div id="headerText">
+        <h1>
+          <a href="/">Magnolia</a><br>
+        </h1>
+        <h2>
+          fast and unintrusive typeclass derivation
+        </h2>
+      </div>
+    </div>
+    <div class="page">
+      <div class="inset">
+        <h3>
+          Getting started
+        </h3>
+        <h4>
+          SBT
+        </h4>
+        <code>"com.propensive" %% "magnolia" % "0.1.0"</code>
+        <h4>
+          Import
+        </h4>
+        <code>import magnolia._</code>
+        <h4>
+          Links
+        </h4>
+        <ul>
+          <li>
+            <a href="https://github.com/propensive/magnolia">Source on GitHub</a>
+          </li>
+          <li>
+            <a href="https://gitter.im/propensive/magnolia">Gitter channel</a>
+          </li>
+          <!--li>
+            <a href="/_/api/index.html">API documentation</a>
+          </li-->
+        </ul>
+      </div>
+      <h3>
+        About
+      </h3>
+      <p>
+        Magnolia is a generic macro for automatic materialization of typeclasses for
+        datatypes composed from <em>case classes</em> (products) and <em>sealed
+        traits</em> (coproducts). It supports recursively-defined datatypes
+        out-of-the-box, and incurs no significant time-penalty during
+        compilation. If derivation fails, error messages are detailed and
+        informative.</p>
+      <h3>
+        Features
+      </h3>
+      <ul>
+        <li>derives typeclasses for case classes and sealed traits</li>
+        <li>works with recursive and mutually-recursive definitions</li>
+        <li>supports the typeclass type parameter used in both covariant and contravariant positions</li>
+        <li>caches implicit searches for compile-time efficiency</li>
+        <li>prints an error-stack to help debugging when derivation fails</li>
+        <li>avoids some problems with implicit prioritization</li>
+        <li>does not require additional type annotations, like <code>Lazy[T]</code></li>
+      </ul>
+      <h3>
+        <img class="right" onload="this.width/=2" src="images/magnolia6.png">
+        Usage
+      </h3>
+      <p>
+      <p>Given an ADT such as,</p>
+        <pre>
+sealed trait Tree
+case class Branch(left: Tree, right: Tree) extends Tree
+case class Leaf(value: Int) extends Tree
+</pre>
+        <p>we can automatically derive implicit typeclass instances such as <code>Show[Tree]</code> on-demand, for example in the code,</p>
+        <pre>Branch(Branch(Leaf(1), Leaf(2)), Leaf(3)).show</pre>
+        <p>provided that a <code>Show</code> instance for <code>Int</code>s exists, and an implicit derivation typeclass &mdash; an instance of <code>Derivation</code> or <code>Coderivation</code> &mdash; exists in scope for the typeclass being derived. These are simple to write for most typeclasses.</p>
+        <p>
+          The derivation typeclass for <code>Show</code> might look like this:
+        </p>
+        <pre>implicit val derivation = new Coderivation[Show] {
+  type Return = String
+  def call[T](show: Show[T], value: T): String = show.show(value)
+  def construct[T](body: T =&gt; String): Show[T] = body(_)
+  
+  def join(name: String, xs: ListMap[String]): String =
+    xs.values.mkString(s"$name(", ", ", ")")
+}</pre>
+<p>To include Magnolia derivation in your own project, you should include a low-priority implicit which calls the macro, like so:</p>
+<pre>import language.experimental.macros, magnolia._
+implicit def generic[T]: Show[T] = macro Macros.magnolia[T, Show[_]]
+</pre>
+<h3>
+  <img class="left" onload="this.width/=2" src="images/magnolia5.png">
+  Debugging
+</h3>
+<p>Deriving typeclasses is not always guaranteed to succeed, though. Many datatypes are complex and deeply-nested, and failure to derive a single type in one of the leaf nodes will cause the entire tree to fail.</p>
+<p>Magnolia tries to be informative about why failures occur, by providing a "stack trace" showing the path to the type which could not be derived.<p>
+<p>For example, when attempting to derive a <code>Show</code> instance for <code>Entity</code>, given the following hypothetical datatypes,</p>
+<pre>sealed trait Entity
+case class Person(name: String, address: Address) extends Entity
+case class Organization(name: String, contacts: Set[Person]) extends Entity
+case class Address(lines: List[String], country: Country)
+case class Country(name: String, code: String, salesTax: Boolean)</pre>
+<p>the absence, for example, of a <code>Show[Boolean]</code> typeclass instance would cause derivation to fail, but the reason might not be obvious, so instead, Magnolia will report the following compile error:</p>
+<pre>could not derive Show instance for type Boolean
+    in parameter 'salesTax' of product type Country
+    in parameter 'country' of product type Address
+    in parameter 'address' of product type Person
+    in chained implicit of type Set[Person]
+    in parameter 'contacts' of product type Organization
+    in coproduct type Entity</pre>
+<h3>How does it work?</h3>
+<p>
+A naïve generic, implicit macro would typically fail when trying to derive a
+typeclass instance for any recursively-defined ADT. It would simply continue
+calling itself forever, following a cycle of types. Thankfully, the compiler is
+able to detect these cycles, and abort early with a <em>divergent implicit
+expansion</em> (DIE) error. Magnolia goes to some lengths to circumvent DIE
+errors during derivation, and instead of attempting to derive a typeclass
+instance for a type which has already been computed, it refers back to the
+typeclass instance created earlier.</p>
+<p>
+<img class="left" onload="this.width/=2" src="images/magnolia2.png">
+In order to achieve this, when an instance of the Magnolia macro initiates
+implicit search, it detects when that results in a recursive call to itself,
+and aborts the nested invocation immediately. Then, instead of relying on
+implicit search for expansion (which is subject to DIE checks), the
+macro implementation method recurses on itself directly.</p>
+<p>This has the advantage that it allows the macro to build a single, complete
+AST expansion, and have it typechecked just once, at the end. This allows trees
+to be generated by nested invocations of the macro which refer to typeclass
+instances defined by surrounding invocations of the macro, without the need to
+have them typecheck in isolation.</p>
+
+<h3>Current Status</h3>
+<p><img class="right" onload="this.width/=2" src="images/magnolia1.png">Magnolia is currently experimental. It has been shown to work for a variety of contrived test cases, though it has not had the same exposure to real-world datatypes that, for example, <em>Shapeless</em> has had.</p>
+<p>The API for defining derivations has been shown to be adequate for the test cases, but is likely to need to evolve as more is learned about different users' requirements.</p>
+<p>In terms of production-readiness, the macro will not produce code which fails to typecheck. But it can always refuse to generate a derivation, so users should be cautious of becoming reliant on it until it has received more thorough testing.</p>
+<p>However, in all cases it should be possible to write typeclass instances manually, and have these take precedence over Magnolia.</p>
+<p>The runtime performance of Magnolia-generated code is also not yet known. It <em>is</em> known that it will generate some ephemeral heap garbage, and this is an area where there is expected to be some improvement in subsequent versions.</p>
+      <p>
+        <img src="images/magnolia4.png" onload="this.width/=2" class="center">
+      </p>
+      <p class="footer">
+         &copy; 2017 Propensive Ltd. All rights reserved.
+      </p>
+    </div>
+  </body>
+</html>
